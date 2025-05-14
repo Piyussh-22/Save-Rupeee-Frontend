@@ -1,0 +1,102 @@
+/*Base Layout & Reset*/
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: black;
+  overflow: hidden;
+}
+
+/*App Layout Structure*/
+.background {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  background-color: black;
+}
+
+.header-fixed,
+.rates-fixed {
+  height: 60px;
+  flex-shrink: 0;
+}
+
+.scrollable-content {
+  flex-grow: 1;
+  overflow-y: auto;
+  margin: 10px 0px;
+}
+/*Header section*/
+.header-bar {
+  background-color: #434a55;
+  border-radius: 10px;
+  height: 60px;
+  padding: 0;
+}
+
+.header-title {
+  color: #d9eafd;
+  font-size: 30px;
+  line-height: 1;
+}
+
+/*Shared Pill Style (Balance + Rates)*/
+.pill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42.5%;
+  height: 80%;
+  font-weight: 500;
+  text-align: center;
+  color: #003366;
+  background-color: #d9eafd;
+  border-radius: 999px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+/*Balance Section */
+.balance-container-bg {
+  background-color: #434a55;
+  border-radius: 10px;
+  height: 50px;
+}
+
+.balance-bar {
+  width: 100%;
+  height: 100%;
+  padding: 0 5%;
+  gap: 10%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/*Rates Section*/
+.rates-container-bg {
+  background-color: #434a55;
+  border-radius: 10px;
+  height: 60px;
+}
+
+.rates-bar {
+  width: 100%;
+  height: 100%;
+  padding: 0 5%;
+  gap: 10%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Optional left/right align (if used) */
+.rate-pill.left {
+  justify-content: flex-start;
+}
+
+.rate-pill.right {
+  justify-content: flex-end;
+}
