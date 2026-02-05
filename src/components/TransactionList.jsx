@@ -2,7 +2,8 @@ import { useContext, useState } from "react";
 import { GlobalContext } from "../context/GlobalState";
 
 const TransactionList = () => {
-  const { state, dispatch } = useContext(GlobalContext);
+  const { state, deleteTransaction, editTransaction } =
+    useContext(GlobalContext);
   const [filterType, setFilterType] = useState("all");
   const [editID, setEditID] = useState(null);
   const [editType, setEditType] = useState("earn");
@@ -19,10 +20,7 @@ const TransactionList = () => {
   const handleDelete = (id) => {
     const confirmDelete = window.confirm("Confirm Delete");
     if (confirmDelete) {
-      dispatch({
-        type: "DELETE_TRANSACTION",
-        payload: id,
-      });
+      deleteTransaction(id).catch(() => undefined);
     }
   };
 
@@ -46,8 +44,13 @@ const TransactionList = () => {
         </select>
       </div>
 
-      <ul className="list-group p-1">
-        {filteredTransactions.map((transactions) => (
+      {state.loading ? (
+        <div className="p-2">Loading transactions...</div>
+      ) : filteredTransactions.length === 0 ? (
+        <div className="p-2">No transactions yet.</div>
+      ) : (
+        <ul className="list-group p-1">
+          {filteredTransactions.map((transactions) => (
           <li
             key={transactions.id}
             style={{ color: transactions.type === "spend" ? "red" : "green" }}
@@ -136,19 +139,16 @@ const TransactionList = () => {
                         alert("Please fill in both text and amount.");
                         return;
                       }
-                      dispatch({
-                        type: "EDIT_TRANSACTION",
-                        payload: {
-                          id: editID,
-                          type: editType,
-                          text: editText,
-                          amount:
-                            editType === "spend"
-                              ? -Math.abs(parseFloat(editAmount))
-                              : Math.abs(parseFloat(editAmount)),
-                        },
-                      });
-                      setEditID(null);
+                      editTransaction(editID, {
+                        type: editType,
+                        text: editText,
+                        amount:
+                          editType === "spend"
+                            ? -Math.abs(parseFloat(editAmount))
+                            : Math.abs(parseFloat(editAmount)),
+                      })
+                        .then(() => setEditID(null))
+                        .catch(() => undefined);
                     } else {
                       setEditID(transactions.id);
                       setEditText(transactions.text);
@@ -170,8 +170,9 @@ const TransactionList = () => {
               </div>
             </div>
           </li>
-        ))}
-      </ul>
+          ))}
+        </ul>
+      )}
     </>
   );
 };

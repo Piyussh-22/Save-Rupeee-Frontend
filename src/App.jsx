@@ -14,6 +14,11 @@ function App() {
         <Header />
       </div>
       <div className="scrollable-content">
+        {state.error ? (
+          <div className="alert alert-danger mb-3" role="alert">
+            {state.error}
+          </div>
+        ) : null}
         <Balance />
         <AddTransactionForm />
         <TransactionList />

@@ -6,7 +6,7 @@ const AddTransactionForm = () => {
   const [text, setText] = useState("");
   const [amount, setAmount] = useState("");
   const [type, setType] = useState("earn");
-  const { dispatch } = useContext(GlobalContext);
+  const { addTransaction, state } = useContext(GlobalContext);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -16,20 +16,21 @@ const AddTransactionForm = () => {
       return;
     }
 
+    const normalizedAmount =
+      type === "spend" ? -Math.abs(Number(amount)) : Math.abs(Number(amount));
+
     const newTransaction = {
-      id: Date.now(),
       text,
-      amount: type === "spend" ? -Number(amount) : Number(amount),
+      amount: normalizedAmount,
       type,
     };
 
-    dispatch({
-      type: "ADD_TRANSACTION",
-      payload: newTransaction,
-    });
-
-    setText("");
-    setAmount("");
+    addTransaction(newTransaction)
+      .then(() => {
+        setText("");
+        setAmount("");
+      })
+      .catch(() => undefined);
   };
 
   return (
@@ -70,9 +71,11 @@ const AddTransactionForm = () => {
         <button
           className="btn btn-outline-secondary text-light"
           type="submit"
-          disabled={!text.trim() || isNaN(amount) || amount === ""}
+          disabled={
+            !text.trim() || isNaN(amount) || amount === "" || state.loading
+          }
         >
-          Add
+          {state.loading ? "Saving..." : "Add"}
         </button>
       </div>
     </form>

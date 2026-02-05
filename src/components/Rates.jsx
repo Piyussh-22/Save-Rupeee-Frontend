@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
+import { GlobalContext } from "../context/GlobalState";
 
 function Rates() {
   const [usdToInr, setUsdToInr] = useState(null);
@@ -7,25 +8,46 @@ function Rates() {
   const [goldSource, setGoldSource] = useState(null);
 
   const [error, setError] = useState(null);
+  const { apiBaseUrl } = useContext(GlobalContext);
+
+  const ratesBaseUrl = useMemo(() => {
+    if (!apiBaseUrl) {
+      return null;
+    }
+    return `${apiBaseUrl}/api`;
+  }, [apiBaseUrl]);
 
   useEffect(() => {
-    fetch("https://expense-rates-backend.onrender.com/api/usd-to-inr")
-      .then((res) => res.json())
+    if (!ratesBaseUrl) {
+      return;
+    }
+
+    fetch(`${ratesBaseUrl}/usd-to-inr`)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Could not load exchange rate.");
+        }
+        return res.json();
+      })
       .then((data) => {
         setUsdToInr(data.rate);
         setSource(data.source);
       })
       .catch(() => setError("Could not load exchange rate."));
 
-    fetch("https://expense-rates-backend.onrender.com/api/gold-rate")
-      .then((res) => res.json())
+    fetch(`${ratesBaseUrl}/gold-rate`)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Could not load gold rate.");
+        }
+        return res.json();
+      })
       .then((data) => {
-        console.log("GOLD DATA:", data);
         setGoldRate(data.rate);
         setGoldSource(data.source);
       })
       .catch(() => setError("Could not load gold rate."));
-  }, []);
+  }, [ratesBaseUrl]);
 
   return (
     <nav className="navbar navbar-expand-lg rates-container-bg mb-4">
@@ -39,6 +61,11 @@ function Rates() {
           ) : (
             <span className="ms-2">Loading...</span>
           )}
+          {source ? (
+            <span className="ms-2 text-muted" style={{ fontSize: "0.85rem" }}>
+              ({source})
+            </span>
+          ) : null}
         </div>
         <div className="pill">
           <span>10g Gold :</span>
@@ -49,6 +76,11 @@ function Rates() {
           ) : (
             <span className="ms-2">Loading...</span>
           )}
+          {goldSource ? (
+            <span className="ms-2 text-muted" style={{ fontSize: "0.85rem" }}>
+              ({goldSource})
+            </span>
+          ) : null}
         </div>
       </div>
     </nav>
