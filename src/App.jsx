@@ -3,22 +3,19 @@ import Balance from "./components/Balance";
 import Rates from "./components/Rates";
 import TransactionList from "./components/TransactionList";
 import AddTransactionForm from "./components/AddTransactionForm";
-import { useContext } from "react";
-import { GlobalContext } from "./context/GlobalState";
 
 function App() {
-  const { state } = useContext(GlobalContext);
   return (
-    <div className="background p-3 mb-2 bg-black bg-gradient text-white">
-      <div className="header-fixed">
+    <div className="flex min-h-screen flex-col bg-black px-3 pb-2 pt-3 text-white">
+      <div className="h-[60px] shrink-0">
         <Header />
       </div>
-      <div className="scrollable-content">
+      <div className="min-h-0 flex-1 overflow-y-auto py-2">
         <Balance />
         <AddTransactionForm />
         <TransactionList />
       </div>
-      <div className="rates-fixed">
+      <div className="h-[60px] shrink-0">
         <Rates />
       </div>
     </div>

@@ -31,14 +31,13 @@ const TransactionList = () => {
 
   return (
     <>
-      <div className="d-flex align-items-center gap-2 p-1">
+      <div className="flex items-center gap-2 p-1">
         <label htmlFor="filter">Filter Transactions: </label>
         <select
           value={filterType}
           id="filter"
           onChange={(e) => setFilterType(e.target.value)}
-          className="form-select"
-          style={{ maxWidth: "120px" }}
+          className="w-full max-w-[120px] rounded-md border border-gray-300 bg-white px-2 py-1 text-sm text-black"
         >
           <option value="all">All</option>
           <option value="earn">Earn</option>
@@ -46,15 +45,15 @@ const TransactionList = () => {
         </select>
       </div>
 
-      <ul className="list-group p-1">
+      <ul className="space-y-2 p-1">
         {filteredTransactions.map((transactions) => (
           <li
             key={transactions.id}
             style={{ color: transactions.type === "spend" ? "red" : "green" }}
-            className="list-group-item d-flex justify-content-between align-items-center rounded-pill m-1"
+            className="flex items-center justify-between rounded-full bg-white px-3 py-2"
           >
-            <div className="d-flex w-100">
-              <div className="d-flex align-items-center flex-grow-1">
+            <div className="flex w-full items-center">
+              <div className="flex flex-1 items-center">
                 {editID === transactions.id ? (
                   <>
                     <input
@@ -64,8 +63,7 @@ const TransactionList = () => {
                       onChange={(e) => {
                         setEditText(e.target.value);
                       }}
-                      className="form-control me-2"
-                      style={{ maxWidth: "120px" }}
+                      className="mr-2 w-full max-w-[120px] rounded-md border border-gray-300 px-2 py-1 text-sm text-black"
                     />
 
                     <input
@@ -84,14 +82,12 @@ const TransactionList = () => {
                           setEditAmount(value);
                         }
                       }}
-                      className="form-control"
-                      style={{ maxWidth: "100px" }}
+                      className="w-full max-w-[100px] rounded-md border border-gray-300 px-2 py-1 text-sm text-black"
                     />
 
-                    <div style={{ marginLeft: "8px" }}>
+                    <div className="ml-2">
                       <select
-                        className="form-select me-2"
-                        style={{ maxWidth: "100px" }}
+                        className="w-full max-w-[100px] rounded-md border border-gray-300 px-2 py-1 text-sm text-black"
                         value={editType}
                         onChange={(e) => setEditType(e.target.value)}
                       >
@@ -100,7 +96,7 @@ const TransactionList = () => {
                       </select>
                     </div>
                     <button
-                      className="btn btn-sm btn-warning ms-2"
+                      className="ml-2 rounded-md border border-amber-500 bg-amber-400 px-3 py-1 text-xs font-semibold text-black"
                       onClick={() => setEditID(null)}
                     >
                       Cancel
@@ -108,12 +104,11 @@ const TransactionList = () => {
                   </>
                 ) : (
                   <>
-                    <span style={{ fontSize: "1.1rem", lineHeight: "1" }}>
+                    <span className="text-[1.1rem] leading-none">
                       {transactions.text}
                     </span>
                     <span
-                      className="badge text-bg-primary rounded-pill ms-2"
-                      style={{ fontSize: "1.1rem", lineHeight: "1" }}
+                      className="ml-2 rounded-full bg-blue-600 px-2 py-1 text-[1.1rem] leading-none text-white"
                     >
                       ₹{transactions.amount}
                     </span>
@@ -121,9 +116,9 @@ const TransactionList = () => {
                 )}
               </div>
 
-              <div className="d-flex align-items-center ms-auto">
+              <div className="ml-auto flex items-center">
                 <button
-                  className="btn  btn-sm btn-outline-secondary"
+                  className="rounded-md border border-gray-400 px-3 py-1 text-xs text-gray-700"
                   type="button"
                   disabled={editID === transactions.id && !isEditValid}
                   onClick={() => {
@@ -161,7 +156,7 @@ const TransactionList = () => {
                 </button>
 
                 <button
-                  className="btn btn-sm btn-danger ms-2"
+                  className="ml-2 rounded-md bg-red-600 px-3 py-1 text-xs text-white"
                   type="button"
                   onClick={() => handleDelete(transactions.id)}
                 >

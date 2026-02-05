@@ -1,10 +1,10 @@
 const Header = () => {
   return (
-    <nav className="navbar navbar-expand-lg header-bar">
-      <div className="container-md d-flex justify-content-center">
-        <div className="navbar-brand header-title">Expense Tracker</div>
+    <div className="flex h-[60px] items-center justify-center rounded-[10px] bg-[#434a55]">
+      <div className="text-[30px] leading-none text-[#d9eafd]">
+        Expense Tracker
       </div>
-    </nav>
+    </div>
   );
 };
 
