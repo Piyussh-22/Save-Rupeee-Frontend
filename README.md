@@ -1,5 +1,7 @@
 # Save Rupee — Frontend
 
+APP :- https://save-rupeee.vercel.app
+
 React PWA frontend for Save Rupee, a personal finance tracker. Built with React 19, Redux Toolkit, and Tailwind CSS v4.
 
 ## Tech Stack
@@ -170,7 +172,7 @@ This app is deployed on [Vercel](https://vercel.com).
 
 Set `VITE_API_URL` to your live backend URL in Vercel's environment variables.
 
-**Live App:** _coming soon_
+**Live App:** (https://save-rupeee.vercel.app)
 
 ## PWA Installation
 
