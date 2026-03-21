@@ -1,14 +1,16 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { Provider } from "react-redux";
+import store from "./app/store.js";
+import "./index.css";
 import App from "./App.jsx";
-import { GlobalProvider } from "./context/GlobalState.jsx";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "./app.css";
 
+const savedTheme = localStorage.getItem("theme") || "dark";
+document.documentElement.classList.add(savedTheme);
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <GlobalProvider>
+    <Provider store={store}>
       <App />
-    </GlobalProvider>
-  </StrictMode>
+    </Provider>
+  </StrictMode>,
 );

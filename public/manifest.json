@@ -1,0 +1,14 @@
+{
+  "name": "Expense Tracker",
+  "short_name": "Tracker",
+  "description": "Track your expenses, earnings and investments",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#030712",
+  "theme_color": "#4f46e5",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "/SaveRupeeePWA.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/SaveRupeeePWA.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
