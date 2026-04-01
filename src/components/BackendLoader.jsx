@@ -17,7 +17,7 @@ const BackendLoader = () => {
     <div className="h-screen w-full flex flex-col items-center justify-center px-4 bg-black">
       {/* Logo */}
       <img
-        src="/saveRupeeeLogo.png"
+        src="/SaveRupeeeLogo.png"
         alt="SaveRupeee"
         className="h-14 w-auto mb-8 opacity-90"
       />
