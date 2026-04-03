@@ -15,6 +15,7 @@ export default function Navbar() {
   const [showMenu, setShowMenu] = useState(false);
   const [showLogout, setShowLogout] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
+  const [logoutError, setLogoutError] = useState("");
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showInstall, setShowInstall] = useState(false);
   const menuRef = useRef();
@@ -56,9 +57,19 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     setLoggingOut(true);
-    await api.post("/auth/logout");
-    dispatch(clearUser());
-    navigate("/login", { replace: true });
+    setLogoutError("");
+    try {
+      await api.post("/auth/logout");
+      dispatch(clearUser());
+      navigate("/login", { replace: true });
+    } catch {
+      // Even if logout API fails, clear local state and redirect
+      // This prevents the user from being stuck logged in on the frontend
+      dispatch(clearUser());
+      navigate("/login", { replace: true });
+    } finally {
+      setLoggingOut(false);
+    }
   };
 
   return (
@@ -129,15 +140,24 @@ export default function Navbar() {
       {/* Logout confirm modal */}
       <Modal
         isOpen={showLogout}
-        onClose={() => setShowLogout(false)}
+        onClose={() => {
+          setShowLogout(false);
+          setLogoutError("");
+        }}
         title="Logout"
       >
         <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
           Are you sure you want to log out?
         </p>
+        {logoutError && (
+          <p className="text-red-500 text-sm mb-3 text-center">{logoutError}</p>
+        )}
         <div className="flex gap-2">
           <button
-            onClick={() => setShowLogout(false)}
+            onClick={() => {
+              setShowLogout(false);
+              setLogoutError("");
+            }}
             className="flex-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 font-medium py-3 rounded-xl cursor-pointer"
           >
             Cancel

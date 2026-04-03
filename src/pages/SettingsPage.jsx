@@ -43,6 +43,7 @@ export default function SettingsPage() {
       const res = await api.get(`/api/export?from=${from}&to=${to}`, {
         responseType: "blob",
       });
+
       const url = window.URL.createObjectURL(
         new Blob([res.data], { type: "application/pdf" }),
       );
@@ -52,6 +53,9 @@ export default function SettingsPage() {
       document.body.appendChild(link);
       link.click();
       link.remove();
+
+      // Release the blob from memory immediately after download is triggered
+      window.URL.revokeObjectURL(url);
     } catch {
       setExportError("Failed to export. Please try again.");
     } finally {

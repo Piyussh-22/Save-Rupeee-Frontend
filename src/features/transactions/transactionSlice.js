@@ -3,25 +3,43 @@ import api from "../../services/api.js";
 
 export const fetchTransactions = createAsyncThunk(
   "transactions/fetch",
-  async (page) => {
-    const res = await api.get(`/api/transactions?page=${page}&limit=10`);
-    return { ...res.data, page };
+  async (page, { rejectWithValue }) => {
+    try {
+      const res = await api.get(`/api/transactions?page=${page}&limit=10`);
+      return { ...res.data, page };
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data?.error || "Failed to fetch transactions",
+      );
+    }
   },
 );
 
 export const updateTransaction = createAsyncThunk(
   "transactions/update",
-  async ({ id, data }) => {
-    const res = await api.patch(`/api/transactions/${id}`, data);
-    return res.data.transaction;
+  async ({ id, data }, { rejectWithValue }) => {
+    try {
+      const res = await api.patch(`/api/transactions/${id}`, data);
+      return res.data.transaction;
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data?.error || "Failed to update transaction",
+      );
+    }
   },
 );
 
 export const removeTransaction = createAsyncThunk(
   "transactions/remove",
-  async (id) => {
-    await api.delete(`/api/transactions/${id}`);
-    return id;
+  async (id, { rejectWithValue }) => {
+    try {
+      await api.delete(`/api/transactions/${id}`);
+      return id;
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data?.error || "Failed to delete transaction",
+      );
+    }
   },
 );
 
@@ -32,6 +50,7 @@ const transactionSlice = createSlice({
     page: 1,
     hasMore: true,
     loading: false,
+    error: null,
   },
   reducers: {
     addTransaction: (state, action) => {
@@ -42,6 +61,7 @@ const transactionSlice = createSlice({
     builder
       .addCase(fetchTransactions.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
       .addCase(fetchTransactions.fulfilled, (state, action) => {
         const { transactions, hasMore, page } = action.payload;
@@ -51,15 +71,22 @@ const transactionSlice = createSlice({
         state.page = page + 1;
         state.loading = false;
       })
-      .addCase(fetchTransactions.rejected, (state) => {
+      .addCase(fetchTransactions.rejected, (state, action) => {
         state.loading = false;
+        state.error = action.payload;
       })
       .addCase(updateTransaction.fulfilled, (state, action) => {
         const index = state.items.findIndex((t) => t.id === action.payload.id);
         if (index !== -1) state.items[index] = action.payload;
       })
+      .addCase(updateTransaction.rejected, (state, action) => {
+        state.error = action.payload;
+      })
       .addCase(removeTransaction.fulfilled, (state, action) => {
         state.items = state.items.filter((t) => t.id !== action.payload);
+      })
+      .addCase(removeTransaction.rejected, (state, action) => {
+        state.error = action.payload;
       });
   },
 });

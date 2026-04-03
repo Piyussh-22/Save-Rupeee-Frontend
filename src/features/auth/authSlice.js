@@ -7,8 +7,11 @@ export const fetchMe = createAsyncThunk(
     try {
       const res = await api.get("/auth/me");
       return res.data.user;
-    } catch {
-      return rejectWithValue(null);
+    } catch (err) {
+      // Pass actual error message instead of null so you can debug in production
+      return rejectWithValue(
+        err.response?.data?.error || "Failed to fetch user",
+      );
     }
   },
 );
@@ -18,11 +21,13 @@ const authSlice = createSlice({
   initialState: {
     user: null,
     loading: false,
+    initialized: false, // Tracks whether fetchMe has been attempted at least once
   },
   reducers: {
     clearUser: (state) => {
       state.user = null;
       state.loading = false;
+      state.initialized = true;
     },
   },
   extraReducers: (builder) => {
@@ -33,10 +38,12 @@ const authSlice = createSlice({
       .addCase(fetchMe.fulfilled, (state, action) => {
         state.user = action.payload;
         state.loading = false;
+        state.initialized = true;
       })
       .addCase(fetchMe.rejected, (state) => {
         state.user = null;
         state.loading = false;
+        state.initialized = true; // Even on failure, we know auth has been attempted
       });
   },
 });
